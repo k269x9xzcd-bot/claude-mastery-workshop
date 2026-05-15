@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Claude" />
+  <meta name="description" content="Interactive workshop to master Claude as a power user and developer" />
+
+  <title>Claude Mastery Workshop</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json" />
+
+  <!-- Apple touch icons (inline SVG data URI) -->
+  <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='30' fill='%230a0a0f'/><path d='M90 45 L106 78 L143 83 L117 109 L123 146 L90 128 L57 146 L63 109 L37 83 L74 78 Z' fill='%23d4856a'/></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+  <style>
+    /* Global reset and CSS variables */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --surface-elevated: #1c1c27;
+      --surface-hover: #22223a;
+      --accent: #d4856a;
+      --accent-secondary: #8b7cf8;
+      --accent-gradient: linear-gradient(135deg, #d4856a, #8b7cf8);
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --gold: #f59e0b;
+      --text: #f0f0f5;
+      --text-muted: #8888aa;
+      --border: rgba(255,255,255,0.08);
+      --border-accent: rgba(212,133,106,0.3);
+      --shadow: 0 4px 24px rgba(0,0,0,0.4);
+      --shadow-lg: 0 8px 48px rgba(0,0,0,0.6);
+      --radius: 12px;
+      --radius-lg: 16px;
+      --radius-xl: 24px;
+      --font-heading: 'Space Grotesk', system-ui, sans-serif;
+      --font-body: 'Inter', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', 'Courier New', monospace;
+      --sidebar-width: 240px;
+      --bottom-nav-height: 64px;
+      --safe-top: env(safe-area-inset-top);
+      --safe-bottom: env(safe-area-inset-bottom);
+      --safe-left: env(safe-area-inset-left);
+      --safe-right: env(safe-area-inset-right);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    #root {
+      height: 100%;
+      display: flex;
+    }
+
+    /* Loading screen */
+    #loading {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      gap: 24px;
+    }
+
+    #loading .logo {
+      width: 80px;
+      height: 80px;
+      background: var(--accent-gradient);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    #loading .title {
+      font-family: var(--font-heading);
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    #loading .subtitle {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.85; }
+    }
+
+    /* Global scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+    /* Global button reset */
+    button {
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-family: inherit;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Global focus */
+    :focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading screen shown until React hydrates -->
+  <div id="loading">
+    <div class="logo">✦</div>
+    <div class="title">Claude Mastery Workshop</div>
+    <div class="subtitle">Loading your learning hub…</div>
+  </div>
+
+  <div id="root"></div>
+
+  <!-- React 18 via CDN -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+
+  <!-- Babel standalone for JSX transpilation -->
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+  <!-- Main app (loaded as Babel-transpiled JSX) -->
+  <script type="text/babel" src="/app.js" data-presets="react"></script>
+
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js', { scope: '/' })
+          .then(reg => {
+            console.log('[PWA] Service worker registered:', reg.scope);
+          })
+          .catch(err => {
+            console.warn('[PWA] Service worker registration failed:', err);
+          });
+      });
+    }
+  </script>
+</body>
+</html>
